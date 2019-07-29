@@ -1,0 +1,57 @@
+//PROCESO DE CREACCION DE LA TABLA
+
+public class VentanaPrincipal extends JFrame {
+
+    //Ventana que debe contener una tabla donde se pueda seleccionar un CSV
+    // Archivo CSV: permite compartir datos de forma tabular, filas y columnas
+    
+    public VentanaPrincipal(){
+
+        super("Tabla"); //titulo de la tabla
+        DefaultTableModel modelo = new DefaultTableModel();
+
+        JTable tabla = new JTable(modelo);
+        JScrollPane scroll = new JScrollPane(tabla);
+        tabla.setBounds(12,22,500,500);
+        setSize(750,700);
+        scroll.setBounds(12,22,500,500);
+        add(scroll);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+        setVisible(true);
+       
+//PROCESO DE LOGICA
+
+public class Tabla extends JFrame {
+
+    public static void main(String[] args) {
+        VentanaPrincipal window = new VentanaPrincipal();
+
+        String linea = "";
+
+        File archivo = new File("C:\\Users\\valem\\IdeaProjects\\Tarea #1\\DatosTabla.csv");
+
+        try {
+
+            FileReader lector = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(lector);
+
+            while (br.ready()){
+                if(!(linea = br.readLine()).equals("\000")){ // \000 es el fin del archivo
+                }
+                System.out.println(linea);
+                DefaultTableModel modelo = new DefaultTableModel();
+                //String[]p1 = {"hola","1","2","3"}; (linea de prueba)
+                String[]p2 = {linea};
+                modelo.addRow(p2);
+                JTable tabla = new JTable(modelo);
+
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+    }
+}
