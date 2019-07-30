@@ -1,4 +1,4 @@
-//PROCESO DE CREACCION DE LA TABLA
+//------------------------------- PROCESO DE CREACCION DE LA TABLA ----------------------------
 
 public class VentanaPrincipal extends JFrame {
 
@@ -20,7 +20,7 @@ public class VentanaPrincipal extends JFrame {
         setLayout(null);
         setVisible(true);
        
-//PROCESO DE LOGICA
+//-------------------------------------- PROCESO DE LOGICA -------------------------------------------
 
 public class Tabla extends JFrame {
 
@@ -55,7 +55,8 @@ public class Tabla extends JFrame {
         }
     }
 }
-//SEPARACION POR FILAS Y COLUMAS
+
+//------------------------------- SEPARACION POR FILAS Y COLUMAS -----------------------------------
 
 try {
 
@@ -115,3 +116,109 @@ try {
 
         }
     }
+    
+// ----------------------------------- CÓDIGO COMPLETO ------------------------------------------------
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+public class VentanaPrincipal extends JFrame {
+    //Ventana que debe contener una tabla donde se pueda seleccionar un CSV
+    // Archivo CSV: permite compartir datos de forma tabular, filas y columnas
+    public VentanaPrincipal(){
+
+        super("Tabla"); //titulo de la tabla
+        DefaultTableModel modelo = new DefaultTableModel();
+
+        JFileChooser buscador = new JFileChooser();
+        buscador.showOpenDialog(buscador);
+
+        JTable tabla = new JTable(modelo);
+        JScrollPane scroll1 = new JScrollPane();
+        //JScrollPane scroll2 = new JScrollPane(tabla);
+        tabla.setBounds(12,22,750,700);
+        //tabla.setPreferredSize(new Dimension(750,600));
+        setSize(750,700);
+        scroll1.setBounds(12,22,750,700);
+        scroll1.setViewportView(tabla);
+        add(scroll1);
+        //scroll2.setBounds(22,12,500,500);
+        //add(scroll2);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+        setVisible(true);
+
+        String linea = "";
+
+
+        try {
+
+            String path = buscador.getSelectedFile().getAbsolutePath();
+            File archivo = new File(path);
+
+            FileReader lector = new FileReader(archivo);
+            BufferedReader br = new BufferedReader(lector);
+            int n = 0;
+            int i = 0;
+            int ii= 0;
+            String separacion = ",";
+
+
+            while (br.ready()) {
+                System.out.println("ready");
+
+
+                while (!(linea = br.readLine()).equals("\000")) { // \000 es el fin del archivo
+                    System.out.println("no ha llegado al final del archivo");
+                    if (n == 0) {
+                        System.out.println("Se añadio la primera columna");
+                        n++;
+                        while (i < linea.length()) {
+                            System.out.println("length = " + linea.length());
+                            System.out.println(linea.toCharArray()[i]);
+                            if ((linea.toCharArray()[i] == separacion.toCharArray()[0])) {
+                                System.out.println("aparecio una separacion");
+                                modelo.addColumn(linea.substring(ii, i));
+                                ii = i;
+                                i++;
+                                System.out.println("ii es:" + ii);
+                            } else if (i == linea.length() - 1) {
+                                System.out.println("fin");
+                                modelo.addColumn(linea.substring(ii+1, i+1));
+                                i++;
+                                n++;
+                            } else {
+                                System.out.println(i);
+                                i++;
+                            }
+                        }
+
+
+
+                    }
+                    System.out.println("final del primer while, i es: " + i);
+
+                    String[] parts = linea.split(",");
+                    String data = Arrays.toString(parts);
+                    System.out.println("Part es: " + Arrays.toString(parts));
+
+                    modelo.addRow(parts);
+
+                }
+
+            }
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static void main(String[] args) {
+        VentanaPrincipal t1 = new VentanaPrincipal();
+    }
+}
+
